@@ -18,8 +18,19 @@ class CodeTerminal:
     def get_code_module(self, index):
         return self.code_module_list[index]
 
-    def get_change_list_for_code(self, code):
-        pass
+    def get_delta_list_for_code(self, code):
+        delta_list = []
+        for code_module, code_letter in zip(self.code_module_list, code):
+            delta_list.append(code_module.get_best_index_delta_for_code(code_letter))
+        self.change_with_delta_list([x * -1 for x in delta_list])
+        return delta_list
+
+    def change_with_delta_list(self, delta_list):
+        for code_module, delta in zip(self.code_module_list, delta_list):
+            if delta > 0:
+                code_module.move_up(delta)
+            elif delta < 0:
+                code_module.move_down(abs(delta))
 
     def __str__(self):
         ret_str = "Curr: |"
